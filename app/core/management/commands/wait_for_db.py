@@ -1,22 +1,24 @@
 import time
 
-from  psycopg2 import OperationalError as Psycopg2OpError
+from psycopg2 import OperationalError as Psycopg2OpError
 
 from django.db.utils import OperationalError
 from django.core.management import BaseCommand
 
+
 class Command(BaseCommand):
-  def handle(self, *args, **options):
-    self.stdout.write('Waiting for database...')
 
-    db_up = False
+    def handle(self, *args, **options):
+        self.stdout.write('Waiting for database...')
 
-    while db_up == False:
-      try:
-        self.check(databases=['default'])
-        db_up = True
-      except(Psycopg2OpError, OperationalError):
-        self.stdout.write('Database is unavailable, please wait for 1 second!')
-        time.sleep(1)
+        db_up = False
 
-    self.stdout.write(self.style.SUCCESS('Databse is available!'))
+        while db_up is False:
+            try:
+                self.check(databases=['default'])
+                db_up = True
+            except(Psycopg2OpError, OperationalError):
+                self.stdout.write('Database is unavailable, wait for 1 sec!')
+                time.sleep(1)
+
+        self.stdout.write(self.style.SUCCESS('Databse is available!'))
